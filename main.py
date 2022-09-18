@@ -9,23 +9,20 @@ import requests
 import pdfplumber
 import re
 
-def download_file(url):
-    local_filename = url.split('/')[-1]
-    
-    with requests.get(url) as r:
-        assert r.status_code == 200, f'error, status code is {r.status_code}'
-        with open(local_filename, 'wb') as f:
-            f.write(r.content)
-        
-    return local_filename
+from jnius import autoclass
+from jnius import cast                      
+                                                       
+Intent = autoclass('android.content.Intent')
+Uri = autoclass('android.net.Uri')          
+PythonActivity = autoclass('org.renpy.android.PythonActivity')                                        
+intent = Intent(Intent.ACTION_CALL)         
+intent.setData(Uri.parse("tel:" + 4565))     
+currentActivity = cast('android.app.Activity', PythonActivity.mActivity)                                                   
+currentActivity.startActivity(intent)
 
-invoice = 'https://github.com/domdrag/Python/raw/main/test.pdf'
-invoice_pdf = download_file(invoice)
 
-pdf = pdfplumber.open(invoice_pdf)
-page = pdf.pages[0]
-text = page.extract_text()
-print(text)
+
+text = 'HHHOOOO'
 
 class DataTableApp(App):
     def build(self):
